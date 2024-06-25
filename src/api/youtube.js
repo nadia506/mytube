@@ -7,47 +7,47 @@ export default class Youtube {
     return keyword ? this.#searchByKeyword(keyword) : this.#mostPopular();
   }
 
-  // async relatedVideos(videoId) {
-  //   try {
-  //     const videoResponse = await this.apiClient.videos({
-  //       params: {
-  //         part: "snippet",
-  //         id: videoId,
-  //       },
-  //     });
-
-  //     if (!videoResponse.data.items || videoResponse.data.items.length === 0) {
-  //       return [];
-  //     }
-
-  //     const tags = videoResponse.data.items[0].snippet.tags;
-
-  //     const relatedVideosResponse = await this.#searchByKeyword(tags.join(","));
-
-  //     const relatedVideos = relatedVideosResponse.filter(
-  //       (video) => video.id && video.id.videoId !== videoId
-  //     );
-
-  //     return relatedVideos;
-  //   } catch (error) {
-  //     console.error("Error fetching related videos:", error);
-  //     return [];
-  //   }
-  // }
-
-  async relatedVideos(id) {
-    return this.apiClient
-      .search({
+  async relatedVideos(videoId) {
+    try {
+      const videoResponse = await this.apiClient.videos({
         params: {
           part: "snippet",
-          maxResults: 25,
-          relatedToVideoId: id,
+          id: videoId,
         },
-      })
-      .then((res) =>
-        res.data.items.map((item) => ({ ...item, id: item.id.videoId }))
+      });
+
+      if (!videoResponse.data.items || videoResponse.data.items.length === 0) {
+        return [];
+      }
+
+      const tags = videoResponse.data.items[0].snippet.tags;
+
+      const relatedVideosResponse = await this.#searchByKeyword(tags.join(","));
+
+      const relatedVideos = relatedVideosResponse.filter(
+        (video) => video.id && video.id.videoId !== videoId
       );
+
+      return relatedVideos;
+    } catch (error) {
+      console.error("Error fetching related videos:", error);
+      return [];
+    }
   }
+
+  // async relatedVideos(id) {
+  //   return this.apiClient
+  //     .search({
+  //       params: {
+  //         part: "snippet",
+  //         maxResults: 25,
+  //         relatedToVideoId: id,
+  //       },
+  //     })
+  //     .then((res) =>
+  //       res.data.items.map((item) => ({ ...item, id: item.id.videoId }))
+  //     );
+  // }
 
   async channelImageURL(id) {
     return this.apiClient
