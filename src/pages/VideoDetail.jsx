@@ -9,8 +9,6 @@ export default function VideoDetail() {
   } = useLocation();
   const { title, channelId, channelTitle, description } = video.snippet;
 
-  const [comments, setComments] = useState([]);
-  const [translatedComments, setTranslatedComments] = useState({});
   return (
     <section className="flex flex-col lg:flex-row">
       <article className="basis-4/6">
@@ -19,7 +17,7 @@ export default function VideoDetail() {
           type="text/html"
           width="100%"
           height="640"
-          src={`http://www.youtube.com/embed/${video.id}`}
+          src={`https://www.youtube.com/embed/${video.id}`}
           frameBorder="0"
           title={title}
         />
